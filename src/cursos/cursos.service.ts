@@ -1,35 +1,42 @@
-import { Injectable } from '@nestjs/common';
-import { CreateCursoDto } from './dto/create-curso.dto';
-import { UpdateCursoDto } from './dto/update-curso.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 
 @Injectable()
 export class CursosService {
-  constructor(private prisma: PrismaService) { }
-
-  create(createCursoDto: CreateCursoDto) {
-    return 'This action adds a new curso';
-  }
+  constructor(private prisma: PrismaService) {}
 
   async findAll() {
-    return this.prisma.curso.findMany();
+    const cursos = await this.prisma.curso.findMany();
+
+    if (!cursos || cursos.length === 0) {
+      throw new NotFoundException('No se encontraron cursos registrados');
+    }
+
+    return cursos;
   }
 
   async findLeccionesByCurso(cursoId: number) {
-    return this.prisma.leccion.findMany({
-      where: { cursoId }
+    // Verificar que el curso exista
+    const curso = await this.prisma.curso.findUnique({
+      where: { id: cursoId },
     });
-  }
 
-  findOne(id: number) {
-    return `This action returns a #${id} curso`;
-  }
+    if (!curso) {
+      throw new NotFoundException(
+        `El curso con id ${cursoId} no existe en el sistema`,
+      );
+    }
 
-  update(id: number, updateCursoDto: UpdateCursoDto) {
-    return `This action updates a #${id} curso`;
-  }
+    const lecciones = await this.prisma.leccion.findMany({
+      where: { cursoId },
+    });
 
-  remove(id: number) {
-    return `This action removes a #${id} curso`;
+    if (!lecciones || lecciones.length === 0) {
+      throw new NotFoundException(
+        `El curso con id ${cursoId} no tiene lecciones registradas`,
+      );
+    }
+
+    return lecciones;
   }
 }

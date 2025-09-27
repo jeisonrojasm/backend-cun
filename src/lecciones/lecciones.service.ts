@@ -1,23 +1,31 @@
-import { Injectable } from '@nestjs/common';
-import { CreateLeccioneDto } from './dto/create-leccione.dto';
-import { UpdateLeccioneDto } from './dto/update-leccione.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 
 @Injectable()
 export class LeccionesService {
-  constructor(private prisma: PrismaService) { }
-  create(createLeccioneDto: CreateLeccioneDto) {
-    return 'This action adds a new leccione';
-  }
-
-  findAll() {
-    return `This action returns all lecciones`;
-  }
+  constructor(private prisma: PrismaService) {}
 
   async findPreguntasByLeccion(leccionId: number) {
+    // Verificamos que la lección exista
+    const leccion = await this.prisma.leccion.findUnique({
+      where: { id: leccionId },
+    });
+
+    if (!leccion) {
+      throw new NotFoundException(
+        `La lección con id ${leccionId} no existe en el sistema`,
+      );
+    }
+
     const preguntas = await this.prisma.pregunta.findMany({
       where: { leccionId },
     });
+
+    if (!preguntas || preguntas.length === 0) {
+      throw new NotFoundException(
+        `La lección con id ${leccionId} no tiene preguntas registradas`,
+      );
+    }
 
     // Barajar las preguntas en orden aleatorio (Fisher–Yates shuffle)
     for (let i = preguntas.length - 1; i > 0; i--) {
@@ -26,17 +34,5 @@ export class LeccionesService {
     }
 
     return preguntas;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} leccione`;
-  }
-
-  update(id: number, updateLeccioneDto: UpdateLeccioneDto) {
-    return `This action updates a #${id} leccione`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} leccione`;
   }
 }

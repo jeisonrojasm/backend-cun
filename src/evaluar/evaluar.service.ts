@@ -1,12 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateEvaluarDto } from './dto/create-evaluar.dto';
-import { UpdateEvaluarDto } from './dto/update-evaluar.dto';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import { EvaluarDto } from './dto/evaluar.dto';
 
 @Injectable()
 export class EvaluarService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async evaluar(dto: EvaluarDto) {
     const pregunta = await this.prisma.pregunta.findUnique({
@@ -14,7 +12,13 @@ export class EvaluarService {
     });
 
     if (!pregunta) {
-      throw new NotFoundException('Pregunta no encontrada');
+      throw new NotFoundException(`La pregunta con id ${dto.preguntaId} no existe en el sistema`);
+    }
+
+    if (!pregunta.opciones.includes(dto.respuesta)) {
+      throw new BadRequestException(
+        `La respuesta enviada no es válida para la pregunta con id ${dto.preguntaId}`,
+      );
     }
 
     const esCorrecta = pregunta.respuestaCorrecta === dto.respuesta;
@@ -25,24 +29,5 @@ export class EvaluarService {
       respuestaEnviada: dto.respuesta,
       correcta: esCorrecta,
     };
-  }
-  create(createEvaluarDto: CreateEvaluarDto) {
-    return 'This action adds a new evaluar';
-  }
-
-  findAll() {
-    return `This action returns all evaluar`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} evaluar`;
-  }
-
-  update(id: number, updateEvaluarDto: UpdateEvaluarDto) {
-    return `This action updates a #${id} evaluar`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} evaluar`;
   }
 }
