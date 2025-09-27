@@ -1,9 +1,9 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
 import { CursosService } from './cursos.service';
 
 @Controller('cursos')
 export class CursosController {
-  constructor(private readonly cursosService: CursosService) { }
+  constructor(private readonly cursosService: CursosService) {}
 
   @Get()
   findAll() {
@@ -11,7 +11,9 @@ export class CursosController {
   }
 
   @Get(':cursoId/lecciones')
-  findLeccionesByCurso(@Param('cursoId') cursoId: string) {
-    return this.cursosService.findLeccionesByCurso(+cursoId);
+  findLeccionesByCurso(
+    @Param('cursoId', ParseIntPipe) cursoId: number
+  ) {
+    return this.cursosService.findLeccionesByCurso(cursoId);
   }
 }
