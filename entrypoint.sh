@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Esperar a que Postgres esté listo
-until nc -z db 5432; do
+until nc -z local-db 5432; do
   echo "Esperando a Postgres..."
   sleep 1
 done
