@@ -1,0 +1,10 @@
+# Forzar LF en scripts de shell
+*.sh text eol=lf
+
+# Normalizar JS/TS/JSON/YAML también
+*.js text eol=lf
+*.ts text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.md text eol=lf
