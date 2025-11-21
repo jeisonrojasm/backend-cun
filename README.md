@@ -1,145 +1,146 @@
 # CUN Backend
 
-API REST para manejar los datos de un sistema de gestión de evaluaciones.
+This project implements a RESTful API for an evaluation management system. It provides endpoints to manage courses, lessons, and questions, as well as evaluate user answers.
 
-## 🛠️ Construido con
+## 🛠️ Built with
 
 - NestJS
 - TypeScript
 - PrismaORM
 - PostgreSQL
-- Swagger para documentación
+- Swagger for documentation
 - Docker
 - Jest
 
-## ✅ Prerrequisitos
+## ✅ Prerequisites
 
-Antes de comenzar, asegúrate de tener instalado lo siguiente:
+Before getting started, make sure you have the following installed:
 
 - ✅ [*Git*](https://git-scm.com/)
-- ✅ [*Docker* y Docker Compose](https://www.docker.com/get-started) instalados y en ejecución
+- ✅ [*Docker* y Docker Compose](https://www.docker.com/get-started) installed and running
 
-## 📥 Obtener el proyecto
+## 📥 Get the project
 
-Clona el repositorio:
+Clone the repository:
 
 ```bash
-#Clona el repositorio
+#Clone the repository:
 git clone https://github.com/jeisonrojasm/backend-cun.git
 cd backend-cun
 ```
 
-## 🚀 Ejecutar
+## 🚀 Run
 
-### 1. **Archivo `.env` requerido**
+### 1. **`.env` file required**
 
-El archivo `.env` contiene variables sensibles necesarias para ejecutar el proyecto (como credenciales, tokens y URLs de servicios).
-Por motivos de seguridad **no está incluido en el repositorio**.
+Normally, the `.env` file **should not be included** in a public repository, as it may contain sensitive configuration values.
+However, for demonstration and evaluation purposes —and because this is not a production project— the `.env` file is included in the repository so anyone can run the project without additional setup.
 
-> 🔐 **En el correo que te llegó encontrarás el archivo `.env` necesario para que la ejecución del backend funcione correctamente.**
+You will find the `.env` file already placed in the root of the project.
 
-Una vez lo tengas, colócalo en la raíz del proyecto.
+### 2. Set up the development environment with Docker
 
-### 2. Levantar el entorno de desarrollo con Docker
-
-Como esta aplicación está completamente dockerizada, no es necesario instalar Node.js ni dependencias manualmente en tu equipo. Basta con ejecutar el siguiente comando desde la raíz del proyecto para construir la imagen y levantar el contenedor del backend:
+Since this application is fully containerized with Docker, there’s no need to install Node.js or any dependencies manually on your machine. You just need to run the following command from the project root to build the image and start the backend container:
 
 ```bash
 docker-compose up --build
 ```
 
-Este comando realizará las siguientes acciones:
+This command will perform the following actions:
 
-- Construirá la imagen de Docker definida en el `Dockerfile`, utilizando `node:20-alpine` como base.
-- Instalará automáticamente todas las dependencias declaradas en el `package.json`.
-- Montará el código fuente de tu máquina dentro del contenedor, lo que permite ver los cambios en tiempo real.
+- It will build the Docker image defined in the `Dockerfile`, using `node:20-alpine` as the base.
+- It will automatically install all the dependencies declared in the `package.json`.
+- It will mount the source code from your machine inside the container, allowing you to see changes in real time.
 
-Una vez finalizado el proceso, el backend quedará disponible en:
+Once the process is complete, the backend will be available at:
 
 ```arduino
 http://localhost:3000
 ```
 
-### 3. Conectarse a pgadmin
+### 3. Connect to pgadmin
 
-La base de datos PostgreSQL y la herramienta de administración pgAdmin están también dockerizadas, por lo que no es necesario instalarlas localmente.
+The PostgreSQL database and the pgAdmin management tool are also containerized, so there’s no need to install them locally.
 
-Para acceder a pgAdmin y visualizar la base de datos:
+To access pgAdmin and view the database:
 
-1. Abre tu navegador y visita la siguiente URL:
+1. Open your browser and visit the following URL:
 
    ```bash
    http://localhost:8080
    ```
 
-2. Inicia sesión con las credenciales definidas en tu archivo `.env`:
+2. Log in using the credentials defined in your `.env` file:
 
    ```bash
    PGADMIN_DEFAULT_EMAIL
    PGADMIN_DEFAULT_PASSWORD
    ```
 
-3. Una vez dentro del panel de pgAdmin:
-   - Haz clic derecho sobre la sección **Servers** (barra lateral izquierda).
-   - Selecciona **Register** > **Server**.
+3. Once inside the pgAdmin dashboard:
+   - Right-click on the **Servers** section (left sidebar).
+   - Select **Register** > **Server**.
 
-4. En el formulario de configuración:
+4. In the configuration form:
 
-   🧾 **Pestaña General**
-   - **Name**: Escribe un nombre descriptivo, por ejemplo: `Evaluaciones CUN DB`.
+   🧾 **General tab**
+   - **Name**: Enter a descriptive name, for example: `Evaluaciones CUN DB`.
 
-   🔌 **Pestaña Connection**
-   - **Host name/address**: Definido en la variable `POSTGRES_DB_HOST` del `.env`
-   - **Port**: Definido en la variable `POSTGRES_DB_PORT` del `.env`
-   - **Username**: Definido en la variable `POSTGRES_USER` del `.env`
-   - **Password**: Definido en la variable `POSTGRES_PASSWORD` del `.env`
-   - Opcional: Marca la casilla *Save password* para no tener que ingresarla cada vez.
+   🔌 **Connection tab**
+   - **Host name/address**: Defined in the `POSTGRES_DB_HOST` variable in the `.env` file
+   - **Port**: Defined in the `POSTGRES_DB_PORT` variable in the `.env` file
+   - **Username**: Defined in the `POSTGRES_USER` variable in the `.env` file
+   - **Password**: Defined in the `POSTGRES_PASSWORD` variable in the `.env` file
+   - Optional: Check the *Save password* box so you don’t have to enter it each time.
   
-5. Haz clic en **Save** para guardar la configuración y conectar.
+5. Click **Save** to save the configuration and connect.
 
-   Una vez creada la conexión, podrás navegar por las bases de datos, ver tablas, ejecutar queries y gestionar los datos desde la interfaz de pgAdmin.
+   Once the connection is created, you will be able to browse the databases, view tables, run queries, and manage the data from the pgAdmin interface.
 
-### 4. Migraciones automáticas de la base de datos
+### 4. Automatic database migrations
 
-Este proyecto utiliza un script **.sh** como herramienta para gestionar la migración inicial y la ejecución del seed para poblar la base de datos.
+This project uses a **.sh** script as a tool to manage the initial migration and run the seed to populate the database.
 
-## ✅ Aplicación lista para usarse
+## ✅ Application ready to use
 
-Una vez completados los pasos anteriores:
+Once the previous steps are completed:
 
-- El servidor backend estará corriendo en `http://localhost:3000`.
-- La base de datos PostgreSQL estará lista y migrada.
-- Podrás consumir los endpoints REST definidos.
-- Tendrás acceso a pgAdmin para gestionar tus datos gráficamente.
+- The backend server will be running at `http://localhost:3000`.
+- The PostgreSQL database will be ready and migrated.
+- You will be able to consume the defined REST endpoints.
+- You will have access to pgAdmin to manage your data graphically.
 
-> 🧪 Puedes ahora probar los endpoints usando **Postman** o cualquier cliente HTTP como **Insomnia**.
+> 🧪 You can now test the endpoints using **Postman** or any HTTP client like **Insomnia**.
 
-## 🧪 Pruebas automatizadas
+## 🧪 Automated tests
 
-Este proyecto incluye un conjunto de pruebas unitarias escritas con [Jest](https://jestjs.io/) para asegurar el correcto funcionamiento de los servicios y controladores principales.
+This project includes a set of unit tests written with [Jest](https://jestjs.io/) to ensure the correct functioning of the main services and controllers.
 
-### Estructura de pruebas
+### Test structure
 
-Las pruebas están organizadas siguiendo la misma estructura que los módulos de negocio:
+The tests are organized following the same structure as the business modules:
 
 ```bash
 src/
 ├── modules/
 │   ├── cursos/
 │   │   ├── cursos.service.ts
-│   │   ├── cursos.service.spec.ts   👈 Pruebas del módulo de autenticación
+│   │   ├── cursos.service.spec.ts   👈 Courses module tests
 ```
 
-Cada archivo `*.spec.ts` contiene pruebas para el servicio correspondiente, simulando dependencias con `jest.mock()` y `jest.spyOn()`.
+Each `*.spec.ts` file contains tests for the corresponding service, mocking dependencies with `jest.mock()` and `jest.spyOn()`.
 
-### Ejecutar los tests
+### Run the tests
 
-Puedes ejecutar todos los tests con:
+You can run all the tests with:
 
 ```bash
 npm run test
 ```
 
-## 👨‍💻 Autor
+## 👨‍💻 Author
 
-Desarrollado por **Jeison Rojas** - *Desarrollador Fullstack* - [jeisonrojasm](https://github.com/jeisonrojasm)
+Developed by **Jeison Rojas Mora** - *Fullstack Developer*
+
+- [https://github.com/jeisonrojasm](https://github.com/jeisonrojasm)
+- [https://www.linkedin.com/in/jeison-rojas-mora/](https://www.linkedin.com/in/jeison-rojas-mora/)
